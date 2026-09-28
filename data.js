@@ -1,30 +1,14 @@
-// data.js
-const menu = [
+// data.js - Versione dinamica senza codice fisso
+// Se non ci sono dati salvati, creiamo una base iniziale vuota o di test
+let menuDinamico = JSON.parse(localStorage.getItem('ai_cost_menu')) || [
     { 
-        nome: "Margherita", 
-        venditeMensili: 1240, 
-        prezzoVendita: 9.00, 
+        nome: "Prodotto Standard 1", 
+        venditeMensili: 500, 
+        prezzoVendita: 10.00, 
         ingredienti: [
-            { nome: "Mozzarella", quantitaKg: 0.12 }, 
-            { nome: "Pomodoro", quantitaKg: 0.10 }
-        ] 
-    },
-    { 
-        nome: "4 Formaggi", 
-        venditeMensili: 420, 
-        prezzoVendita: 11.00, 
-        ingredienti: [
-            { nome: "Mozzarella", quantitaKg: 0.10 }, 
-            { nome: "Gorgonzola", quantitaKg: 0.08 },
-            { nome: "Asiago", quantitaKg: 0.05 }
+            { nome: "INGREDIENTE BASE", quantitaKg: 0.20 }
         ] 
     }
 ];
 
-// I prezzi che avevi a sistema prima della nuova fattura
-let prezziBase = {
-    "Mozzarella": 7.20,
-    "Pomodoro": 1.50,
-    "Gorgonzola": 12.00,
-    "Asiago": 9.50
-};
+let prezziStorici = JSON.parse(localStorage.getItem('ai_cost_prezzi')) || {};
