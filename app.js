@@ -1,25 +1,34 @@
-// app.js - Versione CSV Aggiornata e Visibile
+// app.js - Gestione con pulsante "Confronta Fattura"
 
+let fileSelezionato = null;
+
+// Intercetta quando l'utente seleziona un file
 document.getElementById('fileUpload').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const contenutoCSV = e.target.result;
-            elaboraFatturaCSV(contenutoCSV);
-        };
-        reader.readAsText(file);
-    }
+    fileSelezionato = event.target.files[0];
 });
 
-function elaboraFatturaCSV(csv) {
+// Intercetta il click sul tasto "Confronta Fattura"
+document.getElementById('btnConfronta').addEventListener('click', function() {
+    if (!fileSelezionato) {
+        alert("Prima seleziona un file CSV o Excel da caricare!");
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const contenuto = e.target.result;
+        elaboraDatiFattura(contenuto);
+    };
+    reader.readAsText(fileSelezionato);
+});
+
+function elaboraDatiFattura(csv) {
     const righe = csv.split('\n');
     let aumentiTrovati = [];
     let prezziSalvatiNelBrowser = JSON.parse(localStorage.getItem('ai_cost_prezzi')) || {};
     let nuoviPrezziSalvati = { ...prezziSalvatiNelBrowser };
 
-    // Legge il file CSV saltando la prima riga (intestazione)
-    // Formato atteso nel CSV: Ingrediente, Prezzo (es: MOZZARELLA,8.10)
+    // Legge il file riga per riga (Formato atteso: Ingrediente, Prezzo)
     for (let i = 1; i < righe.length; i++) {
         let rigaTrim = righe[i].trim();
         if (rigaTrim !== "") {
@@ -31,18 +40,18 @@ function elaboraFatturaCSV(csv) {
                 if (!isNaN(nuovoPrezzo)) {
                     let vecchioPrezzo = prezziSalvatiNelBrowser[ingrediente];
                     
-                    if (vecchioPrezzo !== undefined) {
-                        if (nuovoPrezzo > vecchioPrezzo) {
-                            let diffPercentuale = ((nuovoPrezzo - vecchioPrezzo) / vecchioPrezzo) * 100;
-                            aumentiTrovati.push({
-                                ingrediente: ingrediente,
-                                vecchio: vecchioPrezzo,
-                                nuovo: nuovoPrezzo,
-                                percentuale: diffPercentuale.toFixed(1)
-                            });
-                        }
+                    // Se esiste un prezzo precedente nello storico, confrontalo
+                    if (vecchioPrezzo !== undefined && nuovoPrezzo > vecchioPrezzo) {
+                        let diffPercentuale = ((nuovoPrezzo - vecchioPrezzo) / vecchioPrezzo) * 100;
+                        aumentiTrovati.push({
+                            ingrediente: ingrediente,
+                            vecchio: vecchioPrezzo,
+                            nuovo: nuovoPrezzo,
+                            percentuale: diffPercentuale.toFixed(1)
+                        });
                     }
-                    // Aggiorna con il nuovo prezzo nel database del browser
+                    
+                    // Aggiorna sempre con il prezzo più recente nel database del browser
                     nuoviPrezziSalvati[ingrediente] = nuovoPrezzo;
                 }
             }
@@ -52,15 +61,15 @@ function elaboraFatturaCSV(csv) {
     // Salva i nuovi prezzi nella memoria del browser
     localStorage.setItem('ai_cost_prezzi', JSON.stringify(nuoviPrezziSalvati));
 
+    // Mostra il report a schermo
     mostraReportGrafico(aumentiTrovati, nuoviPrezziSalvati);
 }
 
 function mostraReportGrafico(aumentiTrovati, tuttiIPrezzi) {
     const contenitore = document.getElementById('risultatiAnalisi');
     contenitore.classList.remove('hidden');
-    contenitore.classList.add('fade-in');
     
-    let htmlOutput = '<h2 class="text-3xl font-bold text-white mb-6 text-center">Report Analisi Acquisti</h2>';
+    let htmlOutput = '<h2 class="text-3xl font-bold text-white mb-6 text-center">Report Confronto Fattura</h2>';
 
     // Se ci sono aumenti, mostra l'Alert in arancione
     if (aumentiTrovati.length > 0) {
@@ -78,16 +87,16 @@ function mostraReportGrafico(aumentiTrovati, tuttiIPrezzi) {
     } else {
         htmlOutput += `
             <div class="bg-slate-900 border-l-4 border-emerald-500 p-6 rounded-r-xl mb-8 shadow-2xl">
-                <span class="bg-emerald-500/20 text-emerald-400 font-bold px-3 py-1 rounded text-sm mb-4 inline-block">NESSUN RINCARO</span>
-                <p class="text-white">Tutti i prezzi di questo file sono stabili o inferiori rispetto allo storico salvato.</p>
+                <span class="bg-emerald-500/20 text-emerald-500 font-bold px-3 py-1 rounded text-sm mb-4 inline-block">NESSUN RINCARO</span>
+                <p class="text-white">I prezzi di questa fattura sono stabili o allineati con lo storico registrato.</p>
             </div>
         `;
     }
 
-    // Tabella con TUTTI i prezzi attualmente memorizzati nel browser (per vedere cosa sta confrontando)
+    // Tabella con lo storico dei prezzi salvati nel browser
     htmlOutput += `
         <div class="bg-slate-800 rounded-xl border border-slate-700 p-6">
-            <h3 class="text-xl font-bold text-white mb-4">Listino Storico Attualmente in Memoria</h3>
+            <h3 class="text-xl font-bold text-white mb-4">Listino Storico Aggiornato nel Sistema</h3>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm">
                     <thead class="bg-slate-900 text-slate-400">
