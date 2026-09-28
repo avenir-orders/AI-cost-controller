@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Cost Controller | Controlla i margini del tuo locale</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="styles.css">
+    <!-- Libreria ufficiale PDF.js per leggere i PDF nel browser senza errori -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
@@ -20,23 +21,25 @@
             <span class="text-emerald-400">Ma quanto ti rimane davvero?</span>
         </h1>
         <p class="text-xl text-slate-400 mb-8 max-w-3xl mx-auto">
-            L’AI che controlla automaticamente costi e margini della tua attività.<br><br>
-            Carica il file degli acquisti in formato CSV per confrontare i prezzi in sicurezza.
+            Carica la fattura in formato <strong>PDF</strong> o un file di listino. L'app estrarrà i dati in modo pulito e controllerà i rincari.
         </p>
         
-        <!-- ZONA DI CARICAMENTO CSV SICURO -->
+        <!-- ZONA DI CARICAMENTO PDF / CSV -->
         <div class="mt-8 bg-slate-800 p-6 rounded-xl border border-dashed border-emerald-500 text-center max-w-md mx-auto shadow-lg shadow-emerald-500/20">
             <label for="fileUpload" class="block text-emerald-400 font-bold mb-3 cursor-pointer hover:text-emerald-300">
-                Carica il file degli acquisti (CSV)
+                Seleziona il file PDF della fattura
             </label>
-            <input type="file" id="fileUpload" accept=".csv" class="text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-500/20 file:text-emerald-400 hover:file:bg-emerald-500/30 cursor-pointer w-full mb-4">
+            <input type="file" id="fileUpload" accept=".pdf,.csv" class="text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-500/20 file:text-emerald-400 hover:file:bg-emerald-500/30 cursor-pointer w-full mb-4">
             
             <button id="btnConfronta" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-3 px-6 rounded-lg transition-colors shadow-md">
-                Analizza e Confronta Prezzi
+                Estrai Dati e Analizza Prezzi
             </button>
         </div>
 
-        <!-- CONTENITORE RISULTATI DINAMICI -->
+        <!-- STATO ELABORAZIONE -->
+        <p id="statoElaborazione" class="text-slate-400 mt-4 text-sm"></p>
+
+        <!-- CONTENITORE RISULTATI -->
         <div id="risultatiAnalisi" class="mt-10 hidden max-w-4xl mx-auto text-left"></div>
     </header>
 
@@ -46,7 +49,7 @@
         <p class="text-slate-500 mb-6">Il controllo automatico dei costi per la ristorazione.</p>
     </footer>
 
-    <!-- SCRIPT COLLEGATI -->
+    <!-- SCRIPT -->
     <script src="app.js"></script>
 </body>
 </html>
