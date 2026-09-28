@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Cost Controller | Controlla i margini del tuo locale</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Libreria PDF.js per leggere i PDF direttamente nel browser -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <link rel="stylesheet" href="styles.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
@@ -23,25 +21,30 @@
         </h1>
         <p class="text-xl text-slate-400 mb-8 max-w-3xl mx-auto">
             L’AI che controlla automaticamente costi e margini della tua attività.<br><br>
-            Carica le tue fatture in PDF e scopri subito se i prezzi dei fornitori sono aumentati.
+            Carica il file degli acquisti in formato CSV per confrontare i prezzi in sicurezza.
         </p>
         
-        <!-- ZONA DI CARICAMENTO E CONFRONTO PDF -->
+        <!-- ZONA DI CARICAMENTO CSV SICURO -->
         <div class="mt-8 bg-slate-800 p-6 rounded-xl border border-dashed border-emerald-500 text-center max-w-md mx-auto shadow-lg shadow-emerald-500/20">
             <label for="fileUpload" class="block text-emerald-400 font-bold mb-3 cursor-pointer hover:text-emerald-300">
-                Seleziona la fattura in formato PDF
+                Carica il file degli acquisti (CSV)
             </label>
-            <input type="file" id="fileUpload" accept=".pdf" class="text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-500/20 file:text-emerald-400 hover:file:bg-emerald-500/30 cursor-pointer w-full mb-4">
+            <input type="file" id="fileUpload" accept=".csv" class="text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-500/20 file:text-emerald-400 hover:file:bg-emerald-500/30 cursor-pointer w-full mb-4">
             
-            <!-- TASTO CONFRONTA -->
             <button id="btnConfronta" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-3 px-6 rounded-lg transition-colors shadow-md">
-                Confronta Fattura PDF
+                Analizza e Confronta Prezzi
             </button>
         </div>
 
         <!-- CONTENITORE RISULTATI DINAMICI -->
         <div id="risultatiAnalisi" class="mt-10 hidden max-w-4xl mx-auto text-left"></div>
     </header>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 py-12 text-center border-t border-slate-900">
+        <h3 class="text-2xl font-bold text-white mb-2">AI Cost Controller</h3>
+        <p class="text-slate-500 mb-6">Il controllo automatico dei costi per la ristorazione.</p>
+    </footer>
 
     <!-- SCRIPT COLLEGATI -->
     <script src="app.js"></script>
