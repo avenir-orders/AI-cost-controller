@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Cost Controller | Controlla i margini del tuo locale</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Libreria PDF.js per leggere i PDF direttamente nel browser -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <link rel="stylesheet" href="styles.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
@@ -21,204 +23,27 @@
         </h1>
         <p class="text-xl text-slate-400 mb-8 max-w-3xl mx-auto">
             L’AI che controlla automaticamente costi e margini della tua attività.<br><br>
-            Sai quanto ti costa davvero ogni prodotto che vendi? E soprattutto: sai quali prodotti stanno facendo scendere il tuo margine senza che tu te ne accorga?
-        </p>
-        <p class="text-slate-300 mb-10 max-w-2xl mx-auto">
-            AI Cost Controller analizza acquisti, ricette, prezzi di vendita e vendite e ti segnala automaticamente dove stai perdendo margine.<br>
-            Non devi controllare Excel ogni settimana. Non devi fare calcoli a mano. Non devi aspettare il commercialista.<br><br>
-            <strong>Carica i tuoi dati. L’AI trova i problemi.</strong>
+            Carica le tue fatture in PDF e scopri subito se i prezzi dei fornitori sono aumentati.
         </p>
         
-     <!-- ZONA DI CARICAMENTO E CONFRONTO -->
+        <!-- ZONA DI CARICAMENTO E CONFRONTO PDF -->
         <div class="mt-8 bg-slate-800 p-6 rounded-xl border border-dashed border-emerald-500 text-center max-w-md mx-auto shadow-lg shadow-emerald-500/20">
             <label for="fileUpload" class="block text-emerald-400 font-bold mb-3 cursor-pointer hover:text-emerald-300">
-                Seleziona il file degli acquisti (CSV / Excel)
+                Seleziona la fattura in formato PDF
             </label>
-            <input type="file" id="fileUpload" accept=".csv, .xlsx, .xls" class="text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-500/20 file:text-emerald-400 hover:file:bg-emerald-500/30 cursor-pointer w-full mb-4">
+            <input type="file" id="fileUpload" accept=".pdf" class="text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-500/20 file:text-emerald-400 hover:file:bg-emerald-500/30 cursor-pointer w-full mb-4">
             
             <!-- TASTO CONFRONTA -->
             <button id="btnConfronta" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-3 px-6 rounded-lg transition-colors shadow-md">
-                Confronta Fattura
+                Confronta Fattura PDF
             </button>
         </div>
 
         <!-- CONTENITORE RISULTATI DINAMICI -->
         <div id="risultatiAnalisi" class="mt-10 hidden max-w-4xl mx-auto text-left"></div>
-
-      
-
-    <hr class="border-slate-800 my-10 max-w-5xl mx-auto">
-
-    <!-- PROBLEM SECTION -->
-    <section class="max-w-4xl mx-auto px-6 py-16">
-        <h2 class="text-3xl font-bold text-center mb-12 text-white">“Il prezzo della materia prima è aumentato. Ma quanto mi sta costando realmente?”</h2>
-        <p class="text-center text-slate-400 mb-12">È questo il tipo di problema che il sistema deve trovare per te. Per esempio:</p>
-        
-        <div class="grid md:grid-cols-3 gap-6">
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-                <h3 class="text-emerald-400 font-bold mb-2">INGREDIENTE CHIAVE</h3>
-                <p class="text-red-400 font-semibold mb-4">+12,4% rispetto al prezzo precedente</p>
-                <p class="text-slate-300 text-sm">→ Impatto stimato sul costo finale: <strong class="text-white">+€486/mese</strong></p>
-            </div>
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-                <h3 class="text-emerald-400 font-bold mb-2">MARGINE PRODOTTO BASE</h3>
-                <p class="text-red-400 font-semibold mb-4">Dal 68,2% al 63,7%</p>
-                <p class="text-slate-300 text-sm">→ Il costo degli ingredienti è aumentato mentre il prezzo di vendita è rimasto invariato.</p>
-            </div>
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-                <h3 class="text-emerald-400 font-bold mb-2">PRODOTTO X</h3>
-                <p class="text-emerald-400 font-semibold">Vendite: +18%</p>
-                <p class="text-red-400 font-semibold mb-4">Margine unitario: -11%</p>
-                <p class="text-slate-300 text-sm">→ Stai vendendo di più un prodotto che ti lascia meno margine.</p>
-            </div>
-        </div>
-        <p class="text-center text-slate-400 mt-8 italic">Questi problemi spesso non sono evidenti guardando solamente il fatturato.</p>
-    </section>
-
-    <!-- THE SOLUTION -->
-    <section class="bg-slate-950 py-16">
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="text-3xl font-bold text-white mb-6">Il tuo fatturato non basta.</h2>
-            <p class="text-slate-300 mb-8 max-w-2xl mx-auto">
-                Puoi aumentare le vendite e contemporaneamente guadagnare meno.<br>
-                Il problema è che normalmente i dati sono sparsi: <em>fatture dei fornitori, listini, Excel, gestionale, ricette, prezzi di vendita, vendite giornaliere, costi delle materie prime.</em>
-            </p>
-            <p class="text-emerald-400 font-bold text-xl mb-10">AI Cost Controller li collega e li trasforma in informazioni utili.</p>
-            
-            <div class="flex flex-col md:flex-row justify-center gap-8 items-center text-left">
-                <div class="bg-red-900/20 border border-red-800 p-6 rounded-xl w-full md:w-1/2 opacity-75">
-                    <p class="text-slate-400 text-sm mb-2">Invece di dirti:</p>
-                    <p class="text-xl font-mono text-red-300">“Food cost: 31,8%”</p>
-                </div>
-                <div class="text-3xl text-slate-600 hidden md:block">→</div>
-                <div class="bg-emerald-900/20 border border-emerald-800 p-6 rounded-xl w-full md:w-1/2">
-                    <p class="text-slate-400 text-sm mb-2">Ti dice:</p>
-                    <p class="text-lg text-emerald-300">“Il tuo food cost è aumentato del 3,6% negli ultimi 30 giorni. Il principale motivo è l’aumento di tre ingredienti.”</p>
-                    <p class="text-slate-400 text-sm mt-2">E ti mostra quali.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FEATURES -->
-    <section class="max-w-5xl mx-auto px-6 py-16">
-        <h2 class="text-3xl font-bold text-center mb-12 text-white">Cosa controlla automaticamente</h2>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="bg-slate-800 p-6 rounded-xl">
-                <h3 class="text-xl font-bold text-white mb-3">Costo delle materie prime</h3>
-                <p class="text-slate-400">Monitora l’evoluzione dei prezzi dei tuoi ingredienti e individua aumenti anomali.</p>
-            </div>
-            <div class="bg-slate-800 p-6 rounded-xl">
-                <h3 class="text-xl font-bold text-white mb-3">Costo reale delle ricette</h3>
-                <p class="text-slate-400">Calcola quanto ti costa realmente produrre ogni piatto o prodotto.</p>
-            </div>
-            <div class="bg-slate-800 p-6 rounded-xl">
-                <h3 class="text-xl font-bold text-white mb-3">Margine per prodotto</h3>
-                <p class="text-slate-400">Scopri quali prodotti generano più margine e quali ne consumano.</p>
-            </div>
-            <div class="bg-slate-800 p-6 rounded-xl">
-                <h3 class="text-xl font-bold text-white mb-3">Prezzi dei fornitori</h3>
-                <p class="text-slate-400">Confronta i prezzi nel tempo e individua aumenti che potrebbero passare inosservati.</p>
-            </div>
-            <div class="bg-slate-800 p-6 rounded-xl">
-                <h3 class="text-xl font-bold text-white mb-3">Vendite + margini</h3>
-                <p class="text-slate-400">Non guarda solamente cosa vendi di più. Analizza anche quanto guadagni realmente su ciò che vendi.</p>
-            </div>
-            <div class="bg-slate-800 p-6 rounded-xl border border-emerald-500/30">
-                <h3 class="text-xl font-bold text-emerald-400 mb-3">Perdite silenziose</h3>
-                <p class="text-slate-400">Individua situazioni come: <em>“Il prodotto vende bene, ma il suo margine è diminuito del 14%.”</em></p>
-            </div>
-        </div>
-    </section>
-
-    <!-- ALERTS -->
-    <section class="bg-slate-800 py-16 border-y border-slate-700">
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="text-3xl font-bold text-white mb-6">Il sistema ti manda gli alert.</h2>
-            <p class="text-slate-300 mb-10 max-w-2xl mx-auto">Non devi entrare ogni giorno nel gestionale. Quando trova qualcosa di importante, ricevi una segnalazione.</p>
-            
-            <div class="bg-slate-900 border-l-4 border-amber-500 p-6 rounded-r-xl text-left max-w-lg mx-auto shadow-2xl">
-                <div class="flex items-center gap-3 mb-4">
-                    <span class="bg-amber-500/20 text-amber-500 font-bold px-3 py-1 rounded text-sm tracking-wider">ATTENZIONE</span>
-                </div>
-                <p class="text-white text-lg mb-4">Il costo della tua <strong class="text-emerald-400">Ricetta Premium</strong> è aumentato del <strong class="text-red-400">9,8%</strong> negli ultimi 30 giorni.</p>
-                <ul class="text-slate-300 space-y-2 mb-6">
-                    <li>• Principale causa: Ingrediente X <span class="text-red-400">+16%</span></li>
-                    <li>• Impatto stimato: <span class="text-red-400">-€312/mese</span></li>
-                    <li>• Vendite attuali: 428 pezzi/mese</li>
-                </ul>
-                <button class="bg-slate-700 hover:bg-slate-600 text-white font-semibold py-2 px-4 rounded transition-colors text-sm w-full">VEDI ANALISI</button>
-            </div>
-            <p class="text-slate-400 mt-8 italic">In questo modo non devi cercare il problema. È il problema che viene da te.</p>
-        </div>
-    </section>
-
-    <!-- HOW IT WORKS & INTEGRATION -->
-    <section class="bg-slate-950 py-16">
-        <div class="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-16">
-            <div>
-                <h2 class="text-3xl font-bold text-white mb-8">Come funziona</h2>
-                <ol class="space-y-6 text-slate-300">
-                    <li class="flex gap-4">
-                        <span class="bg-emerald-500/20 text-emerald-400 font-bold h-8 w-8 flex items-center justify-center rounded-full shrink-0">1</span>
-                        <div>
-                            <strong class="text-white block mb-1">Carichi i tuoi dati</strong>
-                            <p class="text-sm text-slate-400">Puoi iniziare con file Excel o CSV (acquisti, prezzi fornitori, ricette, prodotti, prezzi di vendita, vendite).</p>
-                        </div>
-                    </li>
-                    <li class="flex gap-4">
-                        <span class="bg-emerald-500/20 text-emerald-400 font-bold h-8 w-8 flex items-center justify-center rounded-full shrink-0">2</span>
-                        <div>
-                            <strong class="text-white block mb-1">Il sistema li analizza</strong>
-                            <p class="text-sm text-slate-400">L’AI identifica variazioni di costo, anomalie e cambiamenti nei margini.</p>
-                        </div>
-                    </li>
-                    <li class="flex gap-4">
-                        <span class="bg-emerald-500/20 text-emerald-400 font-bold h-8 w-8 flex items-center justify-center rounded-full shrink-0">3</span>
-                        <div>
-                            <strong class="text-white block mb-1">Ricevi gli alert</strong>
-                            <p class="text-sm text-slate-400">Solo le informazioni che meritano attenzione.</p>
-                        </div>
-                    </li>
-                    <li class="flex gap-4">
-                        <span class="bg-emerald-500/20 text-emerald-400 font-bold h-8 w-8 flex items-center justify-center rounded-full shrink-0">4</span>
-                        <div>
-                            <strong class="text-white block mb-1">Approfondisci il problema</strong>
-                            <p class="text-sm text-slate-400">Vedi da dove nasce la variazione e quanto impatta economicamente.</p>
-                        </div>
-                    </li>
-                    <li class="flex gap-4">
-                        <span class="bg-emerald-500/20 text-emerald-400 font-bold h-8 w-8 flex items-center justify-center rounded-full shrink-0">5</span>
-                        <div>
-                            <strong class="text-white block mb-1">Decidi tu cosa fare</strong>
-                            <p class="text-sm text-slate-400">Il sistema non prende decisioni al posto tuo. Ti mostra dove guardare e perché.</p>
-                        </div>
-                    </li>
-                </ol>
-            </div>
-            <div class="bg-emerald-900/10 border border-emerald-900/30 p-8 rounded-2xl flex flex-col justify-center">
-                <h3 class="text-2xl font-bold text-white mb-6">Non è un altro gestionale.</h3>
-                <ul class="space-y-4 text-slate-300 text-lg mb-8">
-                    <li class="flex items-start gap-2"><span class="text-emerald-400 mt-1">✓</span> Non devi sostituire il tuo gestionale.</li>
-                    <li class="flex items-start gap-2"><span class="text-emerald-400 mt-1">✓</span> Non devi cambiare il modo in cui lavori.</li>
-                </ul>
-                <p class="text-slate-400 mb-4">AI Cost Controller nasce per lavorare <strong class="text-white">sopra i dati che già possiedi.</strong></p>
-                <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 text-center">
-                    <p class="text-slate-400 text-sm">Il gestionale registra quello che succede.<br><strong class="text-emerald-400 text-base">AI Cost Controller ti aiuta a capire cosa significa.</strong></p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="bg-slate-950 py-12 text-center border-t border-slate-900">
-        <h3 class="text-2xl font-bold text-white mb-2">AI Cost Controller</h3>
-        <p class="text-slate-500 mb-6">Il controllo automatico dei costi per la ristorazione.</p>
-        <p class="text-slate-700 text-sm">Smetti di chiederti “come mai questo mese ho guadagnato meno?”<br>Scopri prima dove è cambiato il tuo margine.</p>
-    </footer>
+    </header>
 
     <!-- SCRIPT COLLEGATI -->
-    <script src="data.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
