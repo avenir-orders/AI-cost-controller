@@ -29,13 +29,21 @@
             <strong>Carica i tuoi dati. L’AI trova i problemi.</strong>
         </p>
         
-        <!-- ZONA DI CARICAMENTO FILE -->
+     <!-- ZONA DI CARICAMENTO E CONFRONTO -->
         <div class="mt-8 bg-slate-800 p-6 rounded-xl border border-dashed border-emerald-500 text-center max-w-md mx-auto shadow-lg shadow-emerald-500/20">
-            <label for="fileUpload" class="block text-emerald-400 font-bold mb-2 cursor-pointer hover:text-emerald-300">
-                Carica l'export acquisti (CSV) per testare l'app
+            <label for="fileUpload" class="block text-emerald-400 font-bold mb-3 cursor-pointer hover:text-emerald-300">
+                Seleziona il file degli acquisti (CSV / Excel)
             </label>
-            <input type="file" id="fileUpload" accept=".csv" class="text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-500/20 file:text-emerald-400 hover:file:bg-emerald-500/30 cursor-pointer w-full">
+            <input type="file" id="fileUpload" accept=".csv, .xlsx, .xls" class="text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-500/20 file:text-emerald-400 hover:file:bg-emerald-500/30 cursor-pointer w-full mb-4">
+            
+            <!-- TASTO CONFRONTA -->
+            <button id="btnConfronta" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-3 px-6 rounded-lg transition-colors shadow-md">
+                Confronta Fattura
+            </button>
         </div>
+
+        <!-- CONTENITORE RISULTATI DINAMICI -->
+        <div id="risultatiAnalisi" class="mt-10 hidden max-w-4xl mx-auto text-left"></div>
 
         <!-- CONTENITORE RISULTATI DINAMICI -->
         <div id="risultatiAnalisi" class="mt-10 hidden max-w-4xl mx-auto text-left"></div>
